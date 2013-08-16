@@ -38,11 +38,11 @@ If you have questions, comments, or issues with this plugin, <strong>please leav
 ## Screenshots ##
 
 ###1. The Gravity Forms Highrise Add-on settings page###
-![The Gravity Forms Highrise Add-on settings page](http://svn.wp-plugins.org/gravity-forms-highrise/trunk/screenshot-1.jpg)
+<img src="http://svn.wp-plugins.org/gravity-forms-highrise/trunk/screenshot-1.jpg" alt="The Gravity Forms Highrise Add-on settings page" />
 
 **2. It's easy to integrate Gravity Forms with Highrise:** check a box in the "Advanced" tab of a form's Form Settings  
 ###2. A link to the person in Highrise is added to the entry info box###
-![A link to the person in Highrise is added to the entry info box](http://svn.wp-plugins.org/gravity-forms-highrise/trunk/screenshot-2.jpg)
+<img alt="A link to the person in Highrise is added to the entry info box" src="http://svn.wp-plugins.org/gravity-forms-highrise/trunk/screenshot-2.jpg" />
 
 
 ## Installation ##
