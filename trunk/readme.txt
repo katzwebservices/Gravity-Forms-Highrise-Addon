@@ -6,7 +6,7 @@ Stable tag: trunk
 Contributors: katzwebdesign, katzwebservices
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=zackkatz%40gmail%2ecom&item_name=Gravity%20Forms%20Highrise&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 
-Integrate the remarkable Gravity Forms plugin with Highrise CRM.
+Integrate the remarkable Gravity Forms plugin with Highrise.
 
 == Description ==
 
@@ -33,14 +33,15 @@ This free Highrise Add-On for Gravity Forms adds contacts into Highrise automati
 
 ###Originally developed by <a href="http://www.glidedesign.com/">Glide Design</a>
 
-If you have questions, comments, or issues with this plugin, <strong>please leave your feedback on the <a href="http://wordpress.org/tags/gravity-forms-highrise?forum_id=10">Plugin Support Forum</a></strong>.
+If you have questions, comments, or issues with this plugin, <strong>please leave your feedback on the <a href="https://github.com/katzwebservices/Gravity-Forms-Highrise-Addon/issues">Plugin Support Forum</a></strong>. <a href="http://wordpress.org/plugins/gravity-forms-highrise-crm/">Or use a different plugin</a>.
 
 == Screenshots ==
 
 1. The Gravity Forms Highrise Add-on settings page
 2. It's easy to integrate Gravity Forms with Highrise: check a box in the "Advanced" tab of a form's Form Settings
+3. A link to the person in Highrise is added to the entry info box
 
-== Installation == 
+== Installation ==
 
 1. Upload plugin files to your plugins folder, or install using WordPress' built-in Add New Plugin installer
 1. Activate the plugin
@@ -50,15 +51,22 @@ If you have questions, comments, or issues with this plugin, <strong>please leav
 1. If the settings are correct, it will say so.
 1. Follow on-screen instructions for integrating with Highrise.
 
-== Frequently Asked Questions == 
+== Frequently Asked Questions ==
 
-= Server requirements = 
+= Server requirements =
 Currently, the plugin requires `curl` to be enabled on your server. This will be improved in future versions.
 
 = What's the license for this plugin? =
 This plugin is released under a GPL license.
 
 == Changelog ==
+
+= 2.6 =
+* Fixes for Gravity Forms 1.7 and WordPress 1.6
+	- Accurately show forms with Highrise enabled
+	- Updated installation instructions
+* Notes are added to Entries to show whether the entry was added to Highrise successfully
+* If an entry was added to Highrise, a link to the person in Highrise is added to the Entry info box
 
 = 2.5.2 =
 * Added support for Gravity Forms 1.7
@@ -79,7 +87,7 @@ This plugin is released under a GPL license.
 = 2.4.3 =
 * Fixed issue where if there are no custom fields, the information sent to Highrise is malformed. (Fixed unopened `</subject_datas>` tag, if you want to know!)
 
-= 2.4.2 = 
+= 2.4.2 =
 * Added an Highrise icon next to each form with Highrise integration enabled in the Gravity Forms Edit Forms view
 * Forced `https://` API path to fix submission errors
 
@@ -129,6 +137,14 @@ This plugin is released under a GPL license.
 
 == Upgrade Notice ==
 
+= 2.6 =
+* Fixes for Gravity Forms 1.7 and WordPress 1.6
+	- Accurately show forms with Highrise enabled
+	- Updated installation instructions
+* Notes are added to Entries to show whether the entry was added to Highrise successfully
+* If an entry was added to Highrise, a link to the person in Highrise is added to the Entry info box
+
+
 = 2.5.2 =
 * Added support for Gravity Forms 1.7
 
@@ -146,7 +162,7 @@ This plugin is released under a GPL license.
 = 2.4.3 =
 * Fixed issue where if there are no custom fields, the information sent to Highrise is malformed. (Fixed unopened `</subject_datas>` tag, if you want to know!)
 
-= 2.4.2 = 
+= 2.4.2 =
 * Added an Highrise icon next to each form with Highrise integration enabled in the Gravity Forms Edit Forms view
 * Forced `https://` API path to fix submission errors
 

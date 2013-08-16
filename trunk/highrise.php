@@ -2,12 +2,12 @@
 /*
 Plugin Name: Gravity Forms Highrise Add-On
 Description: Integrates Gravity Forms with Highrise allowing form submissions to be automatically sent to your Highrise account
-Version: 2.5.2
+Version: 2.6
 Author: Katz Web Services, Inc.
 Author URI: http://www.katzwebservices.com
 
 ------------------------------------------------------------------------
-Copyright 2012 Katz Web Services, Inc.
+Copyright 2013 Katz Web Services, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ class GFHighrise {
 	private static $path = "gravity-forms-highrise/highrise.php";
 	private static $url = "http://www.gravityforms.com";
 	private static $slug = "gravity-forms-highrise";
-	private static $version = "2.5.2";
+	private static $version = "2.6";
 	private static $min_gravityforms_version = "1.3.9";
 
     //Plugin starting point. Will load appropriate files
@@ -84,6 +84,8 @@ class GFHighrise {
 		add_filter('gform_tooltips', array('GFHighrise', 'add_form_option_tooltip'));
 
 		add_filter("gform_confirmation", array('GFHighrise', 'confirmation_error'));
+
+		add_action('gform_entry_info', array('GFHighrise', 'entry_info_link_to_highrise'), 10, 2);
     }
 
     public static function is_gravity_forms_installed($asd = '', $echo = true) {
@@ -143,9 +145,8 @@ EOD;
         	}
 
         	if(!empty($activeforms)) {
-
 ?>
-<style type="text/css">
+<style>
 	td a.row-title span.highrise_enabled {
 		position: absolute;
 		background: url('<?php echo WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__)); ?>/highrise-icon.gif') right top no-repeat;
@@ -154,10 +155,16 @@ EOD;
 		margin-left: 10px;
 	}
 </style>
-<script type="text/javascript">
+<script>
 	jQuery(document).ready(function($) {
+		$activeforms = $.parseJSON('<?php echo json_encode($activeforms); ?>');
+
 		$('table tbody.user-list tr').each(function() {
-			if($('td.column-id', $(this)).text() == <?php echo implode('||', $activeforms); ?>) {
+			// Get the ID of the row
+			id = parseInt($('td.column-id', $(this)).text());
+
+			// If the row is in the $activeforms array, add the icon
+			if($activeforms.indexOf(id) >= 0) {
 				$('td a.row-title', $(this)).append('<span class="highrise_enabled" title="Highrise is Enabled for this Form"></span>');
 			}
 		});
@@ -171,7 +178,7 @@ EOD;
 	public static function confirmation_error($confirmation, $form = '', $lead = '', $ajax ='' ) {
 
 		if(current_user_can('administrator') && !empty($_REQUEST['highriseErrorMessage'])) {
-			$confirmation .= sprintf(__('%sThe entry was not added to Highrise because: %s%s%s. %sYou are only being shown this because you are an administrator. Other users will not see this message.%s%s', 'gravity-forms-highrise'), '<div class="error" style="text-align:center; color:#790000; font-size:14px; line-height:1.5em; margin-bottom:16px;background-color:#FFDFDF; margin-bottom:6px!important; padding:6px 6px 4px 6px!important; border:1px dotted #C89797">', '<strong>', esc_html(trim(rtrim($_REQUEST['highriseErrorMessage']))), '</strong>', '<em>', '</em>', '</div>');
+			$confirmation .= sprintf(__('%sThe entry was not added to Highrise because: %s%s%s. %sYou are only being shown this because you are an administrator. Other users will not see this message.%s%s', 'gravity-forms-highrise'), '<div class="error" style="text-align:center; color:#790000; font-size:14px; line-height:1.5em; margin-bottom:16px;background-color:#FFDFDF; margin-bottom:6px!important; padding:6px 6px 4px 6px!important; border:1px dotted #C89797">', '<strong>', esc_html(trim(rtrim($_REQUEST['highriseErrorMessage']))), '</strong>', '<br /><em>', '</em>', '</div>');
 		}
 		return $confirmation;
 	}
@@ -190,7 +197,7 @@ EOD;
 		ob_end_clean();
 		$tooltip = trim(rtrim($tooltip)).' ';
 	?>
-<style type="text/css">
+<style>
 	#gform_title .highrise,
 	#gform_enable_highrise_label {
 		float:right;
@@ -313,7 +320,7 @@ EOD;
         }
 
         ?>
-        <style type="text/css">
+        <style>
             .ul-square li { list-style: square!important; }
             .ol-decimal li { list-style: decimal!important; }
         </style>
@@ -355,11 +362,11 @@ EOD;
 		<h3>Usage Instructions</h3>
 
 		<div class="delete-alert alert_gray">
+			<div class="wp-caption" style="float:right; width:235px; margin:20px;"><img src="<?php echo self::get_base_url(); ?>/settings.jpg" /><small>How the form appears on the Form Settings page</small></div>
 			<h4>To integrate a form with Highrise:</h4>
 			<ol class="ol-decimal">
 				<li>Edit the form you would like to integrate (choose from the <a href="<?php _e(admin_url('admin.php?page=gf_edit_forms')); ?>">Edit Forms page</a>).</li>
 				<li>Click "Form Settings"</li>
-				<li>Click the "Advanced" tab</li>
 				<li><strong>Check the box "Enable Highrise integration"</strong></li>
 				<li>Save the form</li>
 			</ol>
@@ -575,10 +582,51 @@ EOD;
 			   $data['sTags'] = $tags;
 			   $return .= $api->pushTags($data);
 		   }
+
+		   $personID = (string)$api->getPersonId();
+		   gform_update_meta($entry['id'], 'highrise_id', $personID);
+
+		   if(empty($api->errorMsg)) {
+			   self::add_note($entry["id"], sprintf(__('Successfully added to Highrise with ID #%s . View entry at %s', 'gravity-forms-highrise'), $personID, self::getLinkToPerson($personID)));
+			} else {
+				self::add_note($entry["id"], sprintf(__('Errors when adding to Highrise: %s', 'gravity-forms-highrise'), $api->errorMsg));
+			}
+
 		} else {
 			$return = '';
 		}
+
 	   return $return;
+    }
+
+    function getLinkToPerson($personID) {
+    	$settings = get_option('gf_highrise_settings');
+    	return trailingslashit( $settings['url'] ).'people/'.$personID;
+    }
+
+    /**
+     * Add note to GF Entry
+     * @param int $id   Entry ID
+     * @param string $note Note text
+     */
+    private function add_note($id, $note) {
+
+        if(!apply_filters('gravityforms_highrise_add_notes_to_entries', true)) { return; }
+
+        RGFormsModel::add_note($id, 0, __('Gravity Forms Highrise Add-on'), $note);
+    }
+
+    /**
+     * Link to the person in highrise
+     * @param  int $form_id Gravity Forms Form ID
+     * @param  array $lead    Lead array
+     */
+    function entry_info_link_to_highrise($form_id, $lead) {
+        $highrise_id = gform_get_meta($lead['id'], 'highrise_id');
+        $settings = get_option('gf_highrise_settings');
+        if(!empty($highrise_id)) {
+        	echo sprintf(__('Highrise User ID: <a href="%s">%s</a><br /><br />', 'gravity-forms-highrise'), self::getLinkToPerson($highrise_id), $highrise_id);
+        }
     }
 
 	public static function getLabel($temp, $field = '', $input = false){
