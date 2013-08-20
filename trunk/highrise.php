@@ -2,7 +2,7 @@
 /*
 Plugin Name: Gravity Forms Highrise Add-On
 Description: Integrates Gravity Forms with Highrise allowing form submissions to be automatically sent to your Highrise account
-Version: 2.6
+Version: 2.6.1
 Author: Katz Web Services, Inc.
 Author URI: http://www.katzwebservices.com
 
@@ -32,7 +32,7 @@ class GFHighrise {
 	private static $path = "gravity-forms-highrise/highrise.php";
 	private static $url = "http://www.gravityforms.com";
 	private static $slug = "gravity-forms-highrise";
-	private static $version = "2.6";
+	private static $version = "2.6.1";
 	private static $min_gravityforms_version = "1.3.9";
 
     //Plugin starting point. Will load appropriate files
@@ -62,8 +62,8 @@ class GFHighrise {
         if(self::is_highrise_page()){
 
             //enqueueing sack for AJAX requests
-            wp_enqueue_script(array("sack"));
-			wp_enqueue_style('gravityforms-admin', GFCommon::get_base_url().'/css/admin.css');
+            wp_enqueue_script(array("sack", "jquery-ui-tooltip"));
+            wp_enqueue_style('gravityforms-admin', GFCommon::get_base_url().'/css/admin.css');
          }
          else if(in_array(RG_CURRENT_PAGE, array("admin-ajax.php"))){
 
@@ -242,18 +242,12 @@ EOD;
 			}
 		}).trigger('ready');
 
-		$('.tooltip_form_highrise').qtip({
-	         content: $('.tooltip_form_highrise').attr('tooltip'), // Use the tooltip attribute of the element for the content
-	         show: { delay: 200, solo: true },
-	         hide: { when: 'mouseout', fixed: true, delay: 200, effect: 'fade' },
-	         style: 'gformsstyle', // custom tooltip style
-	         position: {
-	      		corner: {
-	         		target: 'topRight'
-	                ,tooltip: 'bottomLeft'
-	      		}
-	  		 }
-	      });
+		$('.tooltip_form_highrise').tooltip({
+			// Use the tooltip attribute of the element for the content
+	        content: $('.tooltip_form_highrise').attr('title'),
+	        show: { delay: 200 },
+	        hide: { delay: 200, effect: 'fade' }
+	    });
 	});
 </script><?php
 	}
@@ -779,4 +773,3 @@ EOD;
 
 
 }
-?>

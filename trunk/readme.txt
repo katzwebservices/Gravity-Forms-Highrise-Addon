@@ -1,6 +1,6 @@
 === Gravity Forms Highrise Add-on ===
 Tags: gravity forms, forms, gravity, form, crm, gravity form, customer, contact, contacts, address, addresses, address book, highrise, highrise plugin, form, forms, gravity, gravity form, gravity forms, secure form, simplemodal contact form, wp contact form, widget, high-rise, 37signals, 37 signals, basecamp
-Requires at least: 2.8
+Requires at least: 3.2
 Tested up to: 3.6
 Stable tag: trunk
 Contributors: katzwebdesign, katzwebservices
@@ -60,6 +60,9 @@ Currently, the plugin requires `curl` to be enabled on your server. This will be
 This plugin is released under a GPL license.
 
 == Changelog ==
+
+= 2.6.1 =
+* Fixes tooltip issue on Gravity Forms settings page
 
 = 2.6 =
 * Fixes for Gravity Forms 1.7 and WordPress 1.6
@@ -136,6 +139,9 @@ This plugin is released under a GPL license.
 * Push functionality for all forms to people and notes
 
 == Upgrade Notice ==
+
+= 2.6.1 =
+* Fixes tooltip issue on Gravity Forms settings page
 
 = 2.6 =
 * Fixes for Gravity Forms 1.7 and WordPress 1.6
