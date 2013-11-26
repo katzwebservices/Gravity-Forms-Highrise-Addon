@@ -683,7 +683,7 @@ EOD;
 		} else if ($type == 'name' && ( strpos( $the_label,"last") !== false || ( strpos( $the_label,"name") !== false && strpos($the_label,"last") !== false) ) || strtolower($field['inputName']) == 'slastname') {
 			$label = 'sLastName';
 		} else if ( strpos( $the_label,"name") !== false && $type == 'name' || strtolower($field['inputName']) == 'bothnames') {
-			$label = 'BothNames';
+			$label = 'sBothName';
 		} else if ( strpos( $the_label,"company") !== false  || strtolower($field['inputName']) == 'scompany') {
 			$label = 'sCompany';
 		} else if ( strpos( $the_label,"email") !== false || strpos( $the_label,"e-mail") !== false || $type == 'email' || strtolower($field['inputName']) == 'semail') {
